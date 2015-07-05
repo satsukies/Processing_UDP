@@ -1,14 +1,14 @@
 import hypermedia.net.*;
 
-Tetris tetris;
+Tetris mTetris;
 
 UDP udp;
 int portNo = 12345;
 
 /* Network Data */
 class NetworkData {
-  int x;    // 4byte integer
-  int y;    // 4byte integer
+  int code;    // 4byte integer
+  int id;    // 4byte integer
 }
 
 boolean flagReceived = false;
@@ -16,8 +16,8 @@ boolean flagReceived = false;
 NetworkData receiveBuffer;
 
 void setup() {
-  frameRate(10);
-  size(800, 680);
+  frameRate(5);
+  size(740, 680);
 
   /* Initialize UDP Server */
   udp = new UDP(this, portNo);
@@ -26,25 +26,23 @@ void setup() {
   udp.listen(true);
 
   receiveBuffer = new NetworkData();
-  receiveBuffer.x = receiveBuffer.y = 0;
+  receiveBuffer.code = receiveBuffer.id = 0;
   background(255);
 
-  tetris = new Tetris();
-  tetris.setup();
+  mTetris = new Tetris();
 }
 
 void keyPressed() {
-  tetris.keyPressed();
+  mTetris.keyPressed();
 }
 
 void draw() {
   if (flagReceived == true) {
-    point( receiveBuffer.x, receiveBuffer.y );
-    ellipse( receiveBuffer.x, receiveBuffer.y, 10, 10 );
     flagReceived = false;
-    tetris.recieveKeyData(receiveBuffer.x, receiveBuffer.y);
+    mTetris.recieveUDP(receiveBuffer.code, receiveBuffer.id);
   }
-  tetris.draw();
+
+  mTetris.draw();
 }
 
 /* byte[] to int(OMAJINAI) */
@@ -66,13 +64,13 @@ byte[] intToByteArray(int a) {
     tmpArray[1] = data[1];
     tmpArray[2] = data[2];
     tmpArray[3] = data[3];
-    receiveBuffer.x = byteArrayToInt(tmpArray);
+    receiveBuffer.code = byteArrayToInt(tmpArray);
     tmpArray[0] = data[4];
     tmpArray[1] = data[5];
     tmpArray[2] = data[6];
     tmpArray[3] = data[7];  
-    receiveBuffer.y = byteArrayToInt(tmpArray);
+    receiveBuffer.id = byteArrayToInt(tmpArray);
     flagReceived = true;
-    println("R:" + receiveBuffer.x + " " + receiveBuffer.y);
+    println("code:" + receiveBuffer.code + ",id:" + receiveBuffer.id);
   }
 
