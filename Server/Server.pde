@@ -16,7 +16,7 @@ boolean flagReceived = false;
 NetworkData receiveBuffer;
 
 void setup() {
-  frameRate(5);
+  frameRate(60);
   size(740, 680);
 
   /* Initialize UDP Server */

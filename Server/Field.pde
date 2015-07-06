@@ -32,6 +32,8 @@ class Field {
   boolean isWinner = false;
 
   int gameScore = 0;
+  
+  int ms = 0;
 
   int[][][] block = 
   {
@@ -431,11 +433,12 @@ class Field {
   void draw() {
     if (isGameOver() || isWinner) {
       gameOver();
-    } else {
+    } else if((millis() - ms) > 1000){
       generateBlock();
       moveBlock();
       drawField();
       deleteLines();
+      ms = millis();
     }
   }
 
@@ -485,7 +488,7 @@ class Field {
   }
 
   void recieveUdpCode(int code) {
-    if (!isGameOver()) {
+    if (!isGameOver() && gameStart) {
       switch(code) {
       case 1:
         moveTurn();
@@ -502,7 +505,12 @@ class Field {
       default:
         break;
       }
+      this.drawField();
     }
+  }
+  
+  void setMs(){
+    ms = millis();
   }
 }
 

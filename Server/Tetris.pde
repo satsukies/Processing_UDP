@@ -91,13 +91,18 @@ class Tetris {
   }
 
   void countDown() {
-    if (second() - second > 0) {
-      drawCount(countDown--);
-      second = second();
-    }
+    if (!gameStart) {
+      if (second() - second > 0) {
+        drawCount(countDown--);
+        second = second();
+      }
 
-    if (countDown < 0) {
-      gameStart = true;
+      if (countDown < 0) {
+        for(int i = 0; i < 2; i++){
+          f[i].setMs();
+        }
+        gameStart = true;
+      }
     }
   }
 }
