@@ -484,6 +484,9 @@ class Field {
       } else if (keyCode==LEFT) {
         moveLeft();
       }
+      drawField();
+    }else if(key == ' '){
+      ready[playerId - 1] = true;
     }
   }
 
